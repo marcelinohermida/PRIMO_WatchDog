@@ -5,44 +5,46 @@ Created on Wed Nov  3 00:06:04 2021
 @author: Marce
 
 Based on 
-https://medium.com/@ManHay_Hong/how-to-create-a-telegram-bot-and-send-messages-with-python-4cf314d9fa3e
+https://medium.com/@ManHay_Hong/how-to-create-a-telegram-bot-and-send-
+messages-with-python-4cf314d9fa3e
 
 """
 
-
+import requests
 
 def telegram_bot_sendtext(bot_message, bot_token, bot_chatID):
+    """
+    Send a text message to a Telegram bot.
 
-    import requests
-    # bot_token = '638395733:AAEZ24otsI8dSA8XvAXYnkGKW3hFpBYzHsQ'
-    # bot_chatID = '7664629'
+    :param bot_message: The message to send.
+    :param bot_token: The Telegram bot token.
+    :param bot_chatID: The chat ID of the recipient.
+    :return: The JSON response from the Telegram API.
+    """
+    
     send_text = ('https://api.telegram.org/bot' + bot_token +
         '/sendMessage?chat_id=' + bot_chatID +
         '&parse_mode=Markdown&text=' + bot_message)
 
-    # Send Trump gif (only for JFC!)
-#    send_trump = ("https://api.telegram.org/bot" + bot_token +
-#                  "/sendVideo?chat_id=" + bot_chatID +
-#                  "&video=" + "https://c.tenor.com/5h-E8J9rnowAAAAM/donald-trump-dancing.gif")
-#    
-
     response = requests.get(send_text)
-    #response = requests.get(send_trump)
-
     return response.json()
   
     
 
-
-
-
-#bot_token = '638395733:AAEZ24otsI8dSA8XvAXYnkGKW3hFpBYzHsQ'
-#bot_chatID = '7664629'
 def telegram_bot_senddocument(simulation_folder, document, caption,
                               bot_token, bot_chatID):
-    import requests
-    import os    
+    """
+    Send a document (file) to a Telegram bot.
 
+    :param simulation_folder: The folder containing the document.
+    :param document: The document (file) to send.
+    :param caption: The caption for the document.
+    :param bot_token: The Telegram bot token.
+    :param bot_chatID: The chat ID of the recipient.
+    :return: The JSON response from the Telegram API.
+    """
+    
+    import os    
     os.chdir(simulation_folder)
     response = requests.post('https://api.telegram.org/bot' +
                              bot_token + '/sendDocument',
@@ -51,8 +53,3 @@ def telegram_bot_senddocument(simulation_folder, document, caption,
                              data={'chat_id': bot_chatID, 'caption': caption})
 
     return response.json()
-
-
-
-
-#, 'caption': ' sdfsdfsd'

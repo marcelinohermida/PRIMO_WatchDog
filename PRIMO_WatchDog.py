@@ -44,7 +44,7 @@ from pyfiglet import figlet_format
 from termcolor import cprint
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
-from WriteToLog import WriteToLog
+from write_to_log import write_to_log
 
 class Colors: # You may need to change color settings
     RED = '\033[31m'
@@ -94,8 +94,7 @@ if __name__ == "__main__":
                   config_lines = config_file.readlines()   # read lines of file                
     
     
-    
-    
+        
     for index, line in enumerate(config_lines):
         if line == "# DICOM RT IMPORT FOLDER\n":
                 watched_folder = config_lines[index + 1].strip('\n')
@@ -128,7 +127,7 @@ if __name__ == "__main__":
 
     
     print("\n" + Fore.GREEN + Style.BRIGHT + "Waiting for DICOM files \n")
-    WriteToLog("PRIMO WATCHDOG " + VERSION + \
+    write_to_log("PRIMO WATCHDOG " + VERSION + \
                " is active. Waiting for DICOM files")
     
     # functions to be run on specified events 
@@ -189,7 +188,7 @@ if __name__ == "__main__":
                 
             if (number_files == number_files_old & number_files > 0):
                 print(" All DICOM files received! \n")
-                WriteToLog(str(number_files) + " DICOM files received")
+                write_to_log(str(number_files) + " DICOM files received")
                 
                 # change # in the filename                
                 file_list = glob.glob(watched_folder + "/**/*.*",
@@ -199,7 +198,8 @@ if __name__ == "__main__":
                     original_filename = os.path.basename(filename)
                     original_path = os.path.dirname(filename)
                     if '#' in original_filename and '.dcm' in original_filename:
-                        new_filename = original_filename.replace("#", "_")  # "#" no valid en PRIMO
+                        # "#" not valid character in PRIMO
+                        new_filename = original_filename.replace("#", "_")  
                         os.rename(os.path.join(original_path, original_filename),
                                   os.path.join(original_path, new_filename))
                     
@@ -212,7 +212,8 @@ if __name__ == "__main__":
                     original_path = os.path.dirname(filename)
                     if " " in original_filename and '.dcm' in original_filename:
                         new_filename = original_filename.replace(" ", "_")  
-                        os.rename(os.path.join(original_path, original_filename),
+                        os.rename(os.path.join(original_path,
+                                               original_filename),
                                   os.path.join(original_path, new_filename))
                 
                 

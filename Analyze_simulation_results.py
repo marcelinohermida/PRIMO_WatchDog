@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Analyze_simulation_results
+analyze_simulation_results
 
 
 v1.09_para_GitHub: no new features, except adding a fourth gamma criteria:
@@ -37,191 +37,231 @@ Created on Wed Dec  8 17:29:11 2021
 @author: Marce
 """
 
+# IMPORTS
+import os
+import time
+import csv
+import re   # regular expressions
+import glob
+from write_to_log import write_to_log
 
-def Analyze_simulation_results(simulation_folder, linac_ID, TPS, TPS_version,
+# script version
+VERSION = "v. 1.09 Github"
+
+# MAX NUMBER OF STRUCTURES IN THE GAMMA ANALYSIS FILE
+MAX_NUM_STRUCTURES = 30
+
+
+def analyze_simulation_results(simulation_folder, linac_ID, TPS, TPS_version,
                                energy, plan_technique):
 
-    # script version
-    VERSION = "v. 1.09 Github"
-    
-    # IMPORTS
-    import os
-    import time
-    from WriteToLog import WriteToLog
-    import csv
-    import re                    # regular expressions
-    import glob
-    
-    # MAX NUMBER OF STRUCTURES IN THE GAMMA ANALYSIS FILE
-    MAX_NUM_STRUCTURES = 30
-    
     # log start program
-    WriteToLog("Starting extraction of simulation results " + VERSION)
-    
-    
+    write_to_log(f"Starting extraction of simulation results {VERSION}")
+        
     # ANALYSIS OF .LOG FILE
-    file_list = os.listdir(simulation_folder)     # list of files in folder
-    for filename in file_list:    
-        if filename.endswith('.log'):
-            log_file = simulation_folder + "\\" + filename  # path added
-            
-            break
-    WriteToLog("Starting analysis of " + log_file + " file")
+    data_log = analyze_log_file(simulation_folder)
+  
     
-    with open(log_file) as log_file:
-              lines = log_file.readlines()   # read lines of file
-              
-    for index, line in enumerate(lines):
-        if line.startswith(' PRIMO version'):
-                PRIMO_version = lines[index].strip('\n')
-                PRIMO_version = PRIMO_version.rsplit(' ', 1)[1]
-        
-        if line.startswith(' Project Id'):
-                project_id = lines[index].strip('\n')
-                project_id = project_id.rsplit(' ', 1)[1]
-               
-        if line.startswith('  - Number of Processors:'):
-                processors = lines[index].strip('\n')
-                processors = processors.rsplit(' ', 1)[1]
+    # Analyzes and extracts data from RTF simulation file and
+    # stores the data in a data_row
+    data_row = analyze_rtf_file(simulation_folder,
+                                data_log['project_id'], VERSION,
+                                data_log['PRIMO_version'],
+                                data_log['processors'],
+                                data_log['proc_speed_GHz'],
+                                data_log['engine'], data_log['start_datetime'],
+                                data_log['histories'], linac_ID,
+                                TPS, TPS_version, energy, plan_technique,
+                                data_log['PSF'], data_log['MLC_model'],
+                                data_log['splitting_factor'],
+                                data_log['voxel_size_x_mm'],
+                                data_log['voxel_size_y_mm'],
+                                data_log['voxel_size_z_mm'],
+                                data_log['cpu_time_s'],
+                                data_log['speed_hist_s'],
+                                data_log['avg_uncert_percent'],
+                                data_log['int_efficiency'],
+                                data_log['abs_efficiency'])
 
-        if line.startswith('  - Speed (GHz):'):
-                proc_speed_GHz = lines[index].strip('\n')
-                proc_speed_GHz = proc_speed_GHz.rsplit(' ', 1)[1]
-                
-        if line.startswith(' Simulation engine: Dose Planning Method (DPM)'):
-                engine = "DPM"
-
-        if line.startswith(' Simulation engine: PENELOPE'):
-                engine = "PENELOPE"
         
-        if line.startswith('MLC (code,leaves):'):
-                MLC_code = lines[index+1].strip('\n')
-                MLC_code = MLC_code.rsplit(' ', 1)[0]
-                if MLC_code == '400':
-                    MLC_model = 'HD' 
-                elif MLC_code == '300':
-                    MLC_model = 'Millennium 120'
-                else:
-                    MLC_model = 'MLC unknown'
-         
-        if line.startswith(' Simulation started '):
-                start_datetime = lines[index].strip('\n')
-                start_time = start_datetime.rsplit(' at ', 1)[1]       
-                start_date = start_datetime.rsplit(' at ', 1)[0]       
-                start_date = start_date.rsplit(' ', 1)[1]       
-                start_datetime = start_date + ' ' + start_time
         
-        if line.startswith('No of histories:'):
-                histories = lines[index+1].strip('\n').strip()
-                
-        if line.startswith('PSF filename (set to - for none):'):
-                PSF = lines[index+1].strip('\n')
-
-        if line.startswith('Splitting factor in the voxelized geometry:'):
-                splitting_factor = lines[index+1].strip('\n')
-         
-        if line.startswith(' [SECTION VOXELS HEADER'):
-                voxel_sizes = lines[index+3].strip('\n').strip().split()
-                voxel_size_x_mm = float(voxel_sizes[0])*10      # size in mm
-                voxel_size_y_mm = float(voxel_sizes[1])*10      # size in mm
-                voxel_size_z_mm = float(voxel_sizes[2])*10      # size in mm
-        
-        if line.startswith('#   CPU time [t] (s):'):
-                cpu_time_s = float(lines[index+1].strip('\n').rsplit(' ',
-                                   1)[1])
-      
-        if line.startswith('#   Speed (histories/s):'):
-                speed_hist_s = float(lines[index+1].strip('\n').rsplit(' ',
-                                     1)[1])
-                
-        if line.startswith('#   Average uncertainty (above 1/2 max score)'):
-              avg_uncert_percent = float(lines[index+1].strip('\n').rsplit(' ',
-                                         1)[1])
-               
-        if line.startswith('#   Intrinsic efficiency [N*uncert^2]^-1:'):
-              int_efficiency = lines[index+1].strip('\n').rsplit(' ', 1)[1]
-        
-        if line.startswith('#   Absolute efficiency [t*uncert^2]^-1:'):
-              abs_efficiency = lines[index+1].strip('\n').rsplit(' ', 1)[1]
-        
-    WriteToLog("Data extraction from " + log_file.name + " completed")
-    
-    
-    
-    
-    
-    # ANALYSIS OF .RTF FILE (LOG OF THE PRIMO MACRO, GAMMA INDEX ANALYSES, ETC)
-    for filename in file_list:    
-        if filename.endswith('.rtf'):
-            rtf_file = simulation_folder + "\\" + filename  # path added
-            
-            break
-    WriteToLog("Starting analysis of " + rtf_file + " file")
-    
-    with open(rtf_file) as rtf_file:
-              lines = rtf_file.readlines()   # read lines of file
-              
-    for index, line in enumerate(lines):
-        if 'Coarse simulation' in line:
-                coarse_simulation = lines[index].strip('\n')
-                coarse_simulation = coarse_simulation.rsplit(' ', 1)[1]
-                coarse_simulation = coarse_simulation.rsplit('\par')
-                coarse_simulation = coarse_simulation[0]
-    
-        if 'Control points' in line:
-                control_points = lines[index].strip('\n')
-                control_points = control_points.rsplit(' ', 1)[1]
-                control_points = control_points.rsplit('/')
-                control_points = control_points[0]
-    
-    data_row = [project_id, VERSION, PRIMO_version, processors, proc_speed_GHz, engine,
-             start_datetime, histories, linac_ID, TPS, TPS_version, energy,
-             plan_technique, PSF, MLC_model, splitting_factor,
-             voxel_size_x_mm, voxel_size_y_mm, voxel_size_z_mm, cpu_time_s,
-             speed_hist_s, avg_uncert_percent, int_efficiency, abs_efficiency,
-             coarse_simulation, control_points]
-    
-    WriteToLog('Data extraction from ' + filename + ' completed')
-    
-    
-    # ANALYSIS OF TEXT FILES WITH GAMMA ANALYSIS RESULTS
-    # Data extraction from text files with gamma analysis result
+    # List of the text files with the gamma analysis results
     text_file_list = glob.glob1(simulation_folder, "*_dose_report_*.txt")
     
-    all_analysis_row = []       # list to store structure name and GPR of all files
+    # Extracts data from the text files with gamma analysis results
+    updated_data_row = extract_gamma_analysis_data(text_file_list,
+                                                   simulation_folder,
+                                                   MAX_NUM_STRUCTURES,
+                                                   data_row)
+
+    
+    # Saves simulation results and gamma analysis to a CSV file
+    save_simulation_results_to_csv(text_file_list, MAX_NUM_STRUCTURES,
+                                   updated_data_row)
+    
+
+
+
+
+
+
+
+
+def analyze_log_file(simulation_folder):
+    file_list = os.listdir(simulation_folder)
+    
+    log_file_path = None
+    for filename in file_list:
+        if filename.endswith('.log'):
+            log_file_path = os.path.join(simulation_folder, filename)
+            break
+
+    if not log_file_path:
+        return
+
+    write_to_log(f"Starting analysis of {log_file_path} file")
+
+    with open(log_file_path, 'r') as log_file:
+        lines = log_file.readlines()
+
+    data = {}
+    for index, line in enumerate(lines):
+        if line.startswith(' PRIMO version'):
+            data['PRIMO_version'] = line.strip('\n').rsplit(' ', 1)[1]
+        elif line.startswith(' Project Id'):
+            data['project_id'] = line.strip('\n').rsplit(' ', 1)[1]
+        elif line.startswith('  - Number of Processors:'):
+            data['processors'] = line.strip('\n').rsplit(' ', 1)[1]
+        elif line.startswith('  - Speed (GHz):'):
+            data['proc_speed_GHz'] = line.strip('\n').rsplit(' ', 1)[1]
+        elif line.startswith(' Simulation engine: Dose Planning Method (DPM)'):
+            data['engine'] = "DPM"
+        elif line.startswith(' Simulation engine: PENELOPE'):
+            data['engine'] = "PENELOPE"
+        elif line.startswith('MLC (code,leaves):'):
+            MLC_code = lines[index+1].strip('\n').rsplit(' ', 1)[0]
+            data['MLC_model'] = {
+                '400': 'HD',
+                '300': 'Millennium 120'
+            }.get(MLC_code, 'MLC unknown')
+        elif line.startswith(' Simulation started '):
+            start_datetime_parts = line.strip('\n').rsplit(' at ', 1)
+            data['start_datetime'] = f"{start_datetime_parts[0].rsplit(' ', 1)[1]} {start_datetime_parts[1]}"
+        elif line.startswith('No of histories:'):
+            data['histories'] = lines[index+1].strip('\n').strip()
+        elif line.startswith('PSF filename (set to - for none):'):
+            data['PSF'] = lines[index+1].strip('\n')
+        elif line.startswith('Splitting factor in the voxelized geometry:'):
+            data['splitting_factor'] = lines[index+1].strip('\n')
+        elif line.startswith(' [SECTION VOXELS HEADER'):
+            voxel_sizes = lines[index+3].strip('\n').strip().split()
+            data['voxel_size_x_mm'] = float(voxel_sizes[0]) * 10
+            data['voxel_size_y_mm'] = float(voxel_sizes[1]) * 10
+            data['voxel_size_z_mm'] = float(voxel_sizes[2]) * 10
+        elif line.startswith('#   CPU time [t] (s):'):
+            data['cpu_time_s'] = float(lines[index+1].strip('\n').rsplit(' ', 1)[1])
+        elif line.startswith('#   Speed (histories/s):'):
+            data['speed_hist_s'] = float(lines[index+1].strip('\n').rsplit(' ', 1)[1])
+        elif line.startswith('#   Average uncertainty (above 1/2 max score)'):
+            data['avg_uncert_percent'] = float(lines[index+1].strip('\n').rsplit(' ', 1)[1])
+        elif line.startswith('#   Intrinsic efficiency [N*uncert^2]^-1:'):
+            data['int_efficiency'] = lines[index+1].strip('\n').rsplit(' ', 1)[1]
+        elif line.startswith('#   Absolute efficiency [t*uncert^2]^-1:'):
+            data['abs_efficiency'] = lines[index+1].strip('\n').rsplit(' ', 1)[1]
+
+    write_to_log(f"Data extraction from {log_file_path} completed")
+
+    return data
+
+
+
+
+
+
+
+
+def analyze_rtf_file(simulation_folder, project_id, VERSION,
+                     PRIMO_version, processors, proc_speed_GHz, engine,
+                     start_datetime, histories, linac_ID, TPS, TPS_version,
+                     energy, plan_technique, PSF, MLC_model, splitting_factor,
+                     voxel_size_x_mm, voxel_size_y_mm, voxel_size_z_mm,
+                     cpu_time_s, speed_hist_s, avg_uncert_percent,
+                     int_efficiency, abs_efficiency):
+    """Analyze the .RTF file and extract relevant data."""
+    
+    file_list = os.listdir(simulation_folder)     # list of files in folder
+    # Find the .rtf file in the file list
+    rtf_file = next((os.path.join(simulation_folder,filename) for filename \
+                     in file_list if filename.endswith('.rtf')), None)
+    
+    if not rtf_file:
+        write_to_log("No .rtf file found in the provided file list.")
+        return []
+
+    write_to_log(f"Starting analysis of {rtf_file} file")
+    
+    with open(rtf_file, 'r') as file:
+        lines = file.readlines()
+
+    coarse_simulation = ""
+    control_points = ""
+    
+    for index, line in enumerate(lines):
+        if 'Coarse simulation' in line:
+            coarse_simulation = line.strip('\n').rsplit(' ',
+                                          1)[1].rsplit('\par')[0]
+        if 'Control points' in line:
+            control_points = line.strip('\n').rsplit(' ', 1)[1].rsplit('/')[0]
+
+    data_row = [project_id, VERSION, PRIMO_version, processors,
+                proc_speed_GHz, engine, start_datetime, histories, linac_ID,
+                TPS, TPS_version, energy, plan_technique, PSF, MLC_model,
+                splitting_factor, voxel_size_x_mm, voxel_size_y_mm,
+                voxel_size_z_mm, cpu_time_s, speed_hist_s, avg_uncert_percent,
+                int_efficiency, abs_efficiency, coarse_simulation,
+                control_points]
+    
+    write_to_log(f"Data extraction from {rtf_file} completed")
+    
+    return data_row
+
+
+
+
+
+
+
+
+
+def extract_gamma_analysis_data(text_file_list, simulation_folder,
+                                MAX_NUM_STRUCTURES, data_row):
+    """Extract gamma analysis data from text files and update the data row."""
+    
+    all_analysis_row = []
     
     for text_file in text_file_list:
         data_structs = []  # list to store structure name and GPR of each file
-        text_file = os.path.join(simulation_folder, text_file)
-        with open(text_file) as txt_file:
-                  lines = txt_file.readlines()   # read lines of file
+        text_file_path = os.path.join(simulation_folder, text_file)
+        
+        with open(text_file_path) as txt_file:
+            lines = txt_file.readlines()   # read lines of file
         
         for index, line in enumerate(lines):
             if line.startswith("Results of gamma analysis:"):
-            
-                dose_dif = float(re.search("\d+\.\d+", lines[index+1])[0])  #regexp for float
+                dose_dif = float(re.search("\d+\.\d+", lines[index+1])[0])
                 dose_dif = str(dose_dif).replace('.0', '')
-                
                 global_local = re.findall('\(.*?\)', lines[index+1])[1]
                 global_local = global_local.replace('(', '').replace(')', '')
-            
-                DTA = re.search("\d+\.\d+", lines[index+2])[0]  #regexp for float
-                DTA = float(DTA)*10     # DTA in mm
-                DTA = str(DTA).replace('.0', '')
-                
-                th = float(re.search("\d+\.\d+", lines[index+3])[0])  #regexp for float
-                th = str(th).replace('.0', '')
-                
-                region = lines[index+5].strip()
-                region = region.split('Region: ', 1)[1]
-            
+                DTA = re.search("\d+\.\d+", lines[index+2])[0]
+                DTA = str(float(DTA)*10).replace('.0', '')
+                th = str(float(re.search("\d+\.\d+",
+                                         lines[index+3])[0])).replace('.0', '')
+                region = lines[index+5].strip().split('Region: ', 1)[1]
                 total_GPR = float(re.search("\d+\.\d+", lines[index+8])[0])
             
-            # read name and GPR of structures. Only taken into account the
-            # structures with GPR calculated (i.e. with dose > threshold)
             if line.startswith("REGION"):
                 struct_count = 0
-                while 1:        ## executes until a break is found
+                while True:
                     try:
                         struct = lines[index+2+struct_count].strip().split('   ')
                     except:
@@ -229,105 +269,90 @@ def Analyze_simulation_results(simulation_folder, linac_ID, TPS, TPS_version,
                     struct_name = struct[0]
                     if struct_name == '':
                         break
-                    try:   # only considers structures with GPR
+                    try:
                         struct_GPR = float(struct[-1])
-                        data_structs =  data_structs + [struct_name, struct_GPR]
+                        data_structs.extend([struct_name, struct_GPR])
                     except:
-                        struct_GPR = ''
-                    
-                    struct_count = struct_count + 1
+                        pass
+                    struct_count += 1
         
-        WriteToLog('Data extraction from ' + text_file + ' completed')
-            
+        write_to_log(f'Data extraction from {text_file_path} completed')
         
-        num_structs = int(len(data_structs)/2)  # num structures found in the file
-        for i in range (num_structs+1, MAX_NUM_STRUCTURES + 1):
-            data_structs = data_structs + ['', '']   # add empty values
-                
-        all_analysis_row = all_analysis_row + \
-            [dose_dif, DTA, global_local, th, region, total_GPR] + \
-            data_structs
-       
+        num_structs = len(data_structs) // 2
+        data_structs.extend(['', ''] * (MAX_NUM_STRUCTURES - num_structs))
+        
+        all_analysis_row.extend([dose_dif, DTA, global_local, th, region,
+                                 total_GPR] + data_structs)
+    
+    data_row.extend(all_analysis_row)
+    return data_row
 
-    data_row = data_row + all_analysis_row    # added structure name and GPR
+
+
+
+def save_simulation_results_to_csv(text_file_list, MAX_NUM_STRUCTURES,
+                                   data_row):
+    """Save the extracted data to a CSV file."""
     
-    
-    
-    
-    
-    # SAVE TO CSV FILE
     # Check if the CSV file already exists in the .exe folder
-    if not(os.path.isfile('PRIMO_simulation_results.csv')):
-    
-        header = ['project_id', 'watchdog_version', 'PRIMO_version',
-                  'processors', 'proc_speed_GHz', 'engine', 'start_datetime',
-                  'histories', 'linac_ID', 'TPS', 'TPS_version', 'energy',
-                  'plan_technique', 'PSF', 'MLC', 'splitting_factor',
-                  'voxel_size_x_mm', 'voxel_size_y_mm', 'voxel_size_z_mm',
-                  'cpu_time_s', 'speed_hist_s', 'avg_uncert_percent',
-                  'int_efficiency', 'abs_efficiency', 'coarse_simulation',
-                  'control_points']
-    
-    
-        for i in range(0, len(text_file_list)):    # add gamma analysis header
-           header = header + ["gamma_analysis_" + str(i+1) + "_dose_percent",
-                              "gamma_analysis_" + str(i+1) + "_DTA_mm",
-                              "gamma_analysis_" + str(i+1) + "_type",
-                              "gamma_analysis_" + str(i+1) + "_th",
-                              "gamma_analysis_" + str(i+1) + "_region",
-                              "gamma_analysis_" + str(i+1) + "_total_GPR"]
-           
-           # add variable names for structure names and GPRs
-           for j in range(0, MAX_NUM_STRUCTURES):
-               header = header + ["gamma_analysis_" + str(i+1) + \
-                                      "_structure_" + str(j+1) + "_name",
-                                  "gamma_analysis_" + str(i+1) + \
-                                      "_structure_" + str(j+1) + "_GPR"]
+    if not os.path.isfile('PRIMO_simulation_results.csv'):
+        header = [
+            'project_id', 'watchdog_version', 'PRIMO_version',
+            'processors', 'proc_speed_GHz', 'engine', 'start_datetime',
+            'histories', 'linac_ID', 'TPS', 'TPS_version', 'energy',
+            'plan_technique', 'PSF', 'MLC', 'splitting_factor',
+            'voxel_size_x_mm', 'voxel_size_y_mm', 'voxel_size_z_mm',
+            'cpu_time_s', 'speed_hist_s', 'avg_uncert_percent',
+            'int_efficiency', 'abs_efficiency', 'coarse_simulation',
+            'control_points'
+        ]
 
-        try:        
-            with open('PRIMO_simulation_results.csv', 'w', encoding='UTF8',
-                newline='') as csv_file:
-                writer = csv.writer(csv_file)
-        
-                # write the header
-                writer.writerow(header)
+        for i in range(len(text_file_list)):
+            header.extend([
+                f"gamma_analysis_{i+1}_dose_percent",
+                f"gamma_analysis_{i+1}_DTA_mm",
+                f"gamma_analysis_{i+1}_type",
+                f"gamma_analysis_{i+1}_th",
+                f"gamma_analysis_{i+1}_region",
+                f"gamma_analysis_{i+1}_total_GPR"
+            ])
+            
+            for j in range(MAX_NUM_STRUCTURES):
+                header.extend([
+                    f"gamma_analysis_{i+1}_structure_{j+1}_name",
+                    f"gamma_analysis_{i+1}_structure_{j+1}_GPR"
+                ])
 
-        except PermissionError:  # can happen if file is used by another process  
-            time.sleep(3)         # wait 3 s for the file
-            with open('PRIMO_simulation_results.csv', 'w', encoding='UTF8',
-                newline='') as csv_file:
+        try:
+            with open('PRIMO_simulation_results.csv', 'w', encoding='UTF8', newline='') as csv_file:
                 writer = csv.writer(csv_file)
-        
-                # write the header
                 writer.writerow(header)
-        
+        except PermissionError:
+            time.sleep(3)
+            with open('PRIMO_simulation_results.csv', 'w', encoding='UTF8', newline='') as csv_file:
+                writer = csv.writer(csv_file)
+                writer.writerow(header)
         except:
-             WriteToLog('ERROR: Header could not be written to csv file')
-    
-    # open csv to save data
+            write_to_log('ERROR: Header could not be written to csv file')
+
     try:
-        with open('PRIMO_simulation_results.csv', 'a', encoding='UTF8',
-              newline='') as csv_file:
+        with open('PRIMO_simulation_results.csv', 'a', encoding='UTF8', newline='') as csv_file:
             writer = csv.writer(csv_file)
-    
-            # write the data
             writer.writerow(data_row)
-            WriteToLog('Results saved to PRIMO_simulation_results.csv')
-
-    except PermissionError:  # can happen if file is used by another process
-        time.sleep(3)         # wait 3 s for the file
-        
-        with open('PRIMO_simulation_results.csv', 'a', encoding='UTF8',
-              newline='') as csv_file:
+            write_to_log('Results saved to PRIMO_simulation_results.csv')
+    except PermissionError:
+        time.sleep(3)
+        with open('PRIMO_simulation_results.csv', 'a', encoding='UTF8', newline='') as csv_file:
             writer = csv.writer(csv_file)
-    
-            # write the data
             writer.writerow(data_row)
-            WriteToLog('Results saved to PRIMO_simulation_results.csv')
-        
+            write_to_log('Results saved to PRIMO_simulation_results.csv')
     except:
-         WriteToLog('ERROR: Results could not be saved to PRIMO_simulation_results.csv!')
+        write_to_log(f"ERROR: Results could not be saved to PRIMO_simulation_results.csv!")
 
-    
-    
-    
+
+
+
+
+
+
+
