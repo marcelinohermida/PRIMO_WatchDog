@@ -42,8 +42,8 @@ init(strip=not sys.stdout.isatty()) # strip colors if stdout is redirected
 
 from pyfiglet import figlet_format
 from termcolor import cprint
-from watchdog.events import PatternMatchingEventHandler
 from watchdog.observers import Observer
+from watchdog.events import PatternMatchingEventHandler
 from WriteToLog import WriteToLog
 
 class Colors: # You may need to change color settings
@@ -83,14 +83,42 @@ if __name__ == "__main__":
         
     #    read CONFIG file
     # Source: (https://stackabuse.com/read-a-file-line-by-line-in-python/)
-    with open('.\\CONFIG.DOG', encoding="UTF-8") as config_file:
+    #with open('.\\CONFIG.DOG', encoding="UTF-8") as config_file:
+    #              config_lines = config_file.readlines()   # read lines of file    
+    
+    if os.environ['COMPUTERNAME'] == 'LAPTOP-78R8OE0P':
+        with open('.\\CONFIG_LAPTOP.DOG', encoding="UTF-8") as config_file:
+                  config_lines = config_file.readlines()   # read lines of file
+    else:
+        with open('.\\CONFIG.DOG', encoding="UTF-8") as config_file:
+                  config_lines = config_file.readlines()   # read lines of file                
+    
+    
+    
+    
+    for index, line in enumerate(config_lines):
+        if line == "# DICOM RT IMPORT FOLDER\n":
+                watched_folder = config_lines[index + 1].strip('\n')
+        
+    #    read CONFIG file
+    # Source: (https://stackabuse.com/read-a-file-line-by-line-in-python/)
+    QUIRON = "NO"    # default option
+    if os.environ['COMPUTERNAME'] == 'LAPTOP-78R8OE0P':
+        with open('.\\CONFIG_LAPTOP.DOG', encoding="UTF-8") as config_file:
+                  config_lines = config_file.readlines()   # read lines of file
+    else:
+        with open('.\\CONFIG.DOG', encoding="UTF-8") as config_file:
                   config_lines = config_file.readlines()   # read lines of file    
 
     for index, line in enumerate(config_lines):
         if line == "# DICOM RT IMPORT FOLDER\n":
                 watched_folder = config_lines[index + 1].strip('\n')
         
-    
+        if line == "# QUIRON\n":
+                QUIRON = config_lines[index + 1].strip('\n')
+                
+                
+                
     # Presentation
     cprint(figlet_format('PRIMO WatchDog', font='big'),
        'green', attrs=['bold'])
