@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """
 
 v1.09_para_GitHub: no new functionalities. Simplifications to publish in
@@ -29,24 +30,23 @@ Created on Sun Oct 31 19:59:07 2021
 
 @author: Marce
 """
-
-import os
-import time
-from watchdog.observers import Observer
-from watchdog.events import PatternMatchingEventHandler
-from WriteToLog import WriteToLog
-import threading
-from Automate_PRIMO_simulations import automate_PRIMO_simulation
 import glob
-
+import os
+import threading
+import time
 import sys
-from colorama import init
-init(strip=not sys.stdout.isatty()) # strip colors if stdout is redirected
-from termcolor import cprint 
-from pyfiglet import figlet_format
-from colorama import Fore, Back, Style
 
-class colors: # You may need to change color settings
+from Automate_PRIMO_simulations import automate_PRIMO_simulation
+from colorama import init, Fore, Back, Style
+init(strip=not sys.stdout.isatty()) # strip colors if stdout is redirected
+
+from pyfiglet import figlet_format
+from termcolor import cprint
+from watchdog.events import PatternMatchingEventHandler
+from watchdog.observers import Observer
+from WriteToLog import WriteToLog
+
+class Colors: # You may need to change color settings
     RED = '\033[31m'
     ENDC = '\033[m'
     GREEN = '\033[32m'
@@ -80,8 +80,7 @@ if __name__ == "__main__":
     except:
         pass
     
-    
-    
+        
     #    read CONFIG file
     # Source: (https://stackabuse.com/read-a-file-line-by-line-in-python/)
     with open('.\\CONFIG.DOG', encoding="UTF-8") as config_file:
@@ -96,7 +95,8 @@ if __name__ == "__main__":
     cprint(figlet_format('PRIMO WatchDog', font='big'),
        'green', attrs=['bold'])
 
-    print(Fore.YELLOW + Back.BLACK + Style.BRIGHT + VERSION + ". Marcelino Hermida (2023)")
+    print(Fore.YELLOW + Back.BLACK + Style.BRIGHT +
+          VERSION + ". Marcelino Hermida (2023)")
 
     
     print("\n" + Fore.GREEN + Style.BRIGHT + "Waiting for DICOM files \n")
@@ -106,31 +106,30 @@ if __name__ == "__main__":
     # functions to be run on specified events 
     def on_created(event):
         print(f"{event.src_path} has been CREATED!")
-        
         #list = os.listdir(watched_folder) # dir is your directory path
-        list = glob.glob(watched_folder + "/**/*.*", recursive = True)
-        number_files = len(list)
+        file_list = glob.glob(watched_folder + "/**/*.*", recursive = True)
+        number_files = len(file_list)
         print (number_files, "files in the watched folder!")
 
     def on_deleted(event):
         print(f"{event.src_path} has been DELETED!")
         #list = os.listdir(watched_folder) # dir is your directory path
-        list = glob.glob(watched_folder + "/**/*.*", recursive = True)
-        number_files = len(list)
+        file_list = glob.glob(watched_folder + "/**/*.*", recursive = True)
+        number_files = len(file_list)
         print (number_files, "files in the watched folder!")
 
     def on_modified(event):
         print(f"{event.src_path} has been MODIFIED")
         #list = os.listdir(watched_folder) # dir is your directory path
-        list = glob.glob(watched_folder + "/**/*.*", recursive = True)
-        number_files = len(list)
+        file_list = glob.glob(watched_folder + "/**/*.*", recursive = True)
+        number_files = len(file_list)
         print (number_files, "files in the watched folder!")
 
     def on_moved(event):
         print(f"{event.src_path} was MOVED to {event.dest_path}")
         #list = os.listdir(watched_folder) # dir is your directory path
-        list = glob.glob(watched_folder + "/**/*.*", recursive = True)
-        number_files = len(list)
+        file_list = glob.glob(watched_folder + "/**/*.*", recursive = True)
+        number_files = len(file_list)
         print (number_files, "files in the watched folder!")
 
 
@@ -153,19 +152,20 @@ if __name__ == "__main__":
     number_files_old = 0
     try:
         while True:
-            list = glob.glob(watched_folder + "/**/*.*", recursive = True)
-            number_files = len(list)
-            print (colors.YELLOW + (str(number_files) + \
-                   " files in the watched folder: " + \
-                   watched_folder) + colors.ENDC)
-            print(colors.GREEN + ' Waiting for DICOM files \n' + colors.ENDC)
+            file_list = glob.glob(watched_folder + "/**/*.*", recursive = True)
+            number_files = len(file_list)
+            print (Colors.YELLOW + (str(number_files) +\
+                   " files in the watched folder: " +\
+                   watched_folder) + Colors.ENDC)
+            print(Colors.GREEN + ' Waiting for DICOM files \n' + Colors.ENDC)
                 
             if (number_files == number_files_old & number_files > 0):
                 print(" All DICOM files received! \n")
                 WriteToLog(str(number_files) + " DICOM files received")
                 
                 # change # in the filename                
-                file_list = glob.glob(watched_folder + "/**/*.*", recursive = True)
+                file_list = glob.glob(watched_folder + "/**/*.*",
+                                      recursive = True)
 
                 for filename in file_list:    
                     original_filename = os.path.basename(filename)
@@ -176,7 +176,8 @@ if __name__ == "__main__":
                                   os.path.join(original_path, new_filename))
                     
                 # change spaces in the filename to "_"                
-                file_list = glob.glob(watched_folder + "/**/*.*", recursive = True)
+                file_list = glob.glob(watched_folder + "/**/*.*",
+                                      recursive = True)
 
                 for filename in file_list:    
                     original_filename = os.path.basename(filename)

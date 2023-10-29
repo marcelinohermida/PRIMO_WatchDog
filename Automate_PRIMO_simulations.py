@@ -6,7 +6,7 @@ AutomatePRIMOsimulations
 v1.09_para_GitHub: no new functionalities. Simplifications to publish in
                    Github. Quiron edition removed. MH. 8/10/23.
 
-v1.09: added gamma  criteria 3%/1mm global with threshold 10%, only for QUIRON.
+v1.09: added gamma criteria 3%/1mm global with threshold 10%, only for QUIRON.
        Opens all gamma analyses PDF reports. 1/11/22. MH.
 
 v1.08: added more conditions to detect if the CT was acquired or if it is a 
