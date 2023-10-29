@@ -5,7 +5,9 @@ analyze_simulation_results
 
 v1.09_para_GitHub: no new features, except adding a fourth gamma criteria:
                    3%/3mm, th=10%. Simplifications to publish in Github.
-                   Quiron edition removed. MH. 8/10/23.
+                   Quiron edition removed. Changes to the code: conform
+                   to PEP-8 style guidelines, and refactoring into functions
+                   to improve readability and maintenance. MH. 29/10/23.
 
 v1.09: no changes respect to 1.08. 1/11/22. MH.
 
@@ -31,7 +33,7 @@ v 1.01: try to implement simulations queue.
 
 v 1.00
 
-Created on Wed Dec  8 17:29:11 2021
+Created on Wed Dec 8 17:29:11 2021
 
 
 @author: Marce
