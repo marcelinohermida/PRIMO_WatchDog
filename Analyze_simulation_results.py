@@ -84,11 +84,11 @@ def analyze_simulation_results(simulation_folder, linac_ID, TPS, TPS_version,
                                 data_log['avg_uncert_percent'],
                                 data_log['int_efficiency'],
                                 data_log['abs_efficiency'])
-
-        
+       
         
     # List of the text files with the gamma analysis results
     text_file_list = glob.glob1(simulation_folder, "*_dose_report_*.txt")
+
     
     # Extracts data from the text files with gamma analysis results
     updated_data_row = extract_gamma_analysis_data(text_file_list,
@@ -96,7 +96,7 @@ def analyze_simulation_results(simulation_folder, linac_ID, TPS, TPS_version,
                                                    MAX_NUM_STRUCTURES,
                                                    data_row)
 
-    
+   
     # Saves simulation results and gamma analysis to a CSV file
     save_simulation_results_to_csv(text_file_list, MAX_NUM_STRUCTURES,
                                    updated_data_row)
