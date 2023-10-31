@@ -502,7 +502,7 @@ def automate_PRIMO_simulation():
     print("\nPRIMO macro created \n")
     write_to_log("PRIMO macro created: " + macro_file.name)
     
-    MULTIPLE_GAMMA_ANALYSES = 4   # analysis with 3 criteria, to be used later.
+    MULTIPLE_GAMMA_ANALYSES = 4   # analysis with 4 criteria, to be used later.
                                   # This will improved in further versions
         
     # Checks if the simulation folder already exists. If it exists, it is
