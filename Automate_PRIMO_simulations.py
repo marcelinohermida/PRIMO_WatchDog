@@ -638,8 +638,8 @@ def automate_PRIMO_simulation():
     
     # EXTRACT DATA FROM LOG AND TXT FILES.
     # ONCE EXTRACTED, SAVE THE DATA ON CSV FILE
-    
     from analyze_simulation_results import analyze_simulation_results
+    
     analyze_simulation_results(simulation_folder, linac_ID, TPS, TPS_version,
                                energy, plan_technique)
 
