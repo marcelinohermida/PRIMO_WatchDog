@@ -478,7 +478,8 @@ def automate_PRIMO_simulation():
             ("3.0", "0.1", "20", "10"),
             ("5.0", "0.1", "20", "10"),
             ("2.0", "0.2", "50", "10"),
-            ("3.0", "0.3", "10", "10")]
+            ("3.0", "0.3", "10", "10")
+            ]
         
         for delta, dta, threshold, unc in gamma_criteria:
             gamma_line = (
