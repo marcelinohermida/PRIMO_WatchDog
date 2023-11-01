@@ -47,7 +47,7 @@ REDUCED
 1.4507
 
 # GAMMA CRITERIA (ACTIVE/INACTIVE, dose_percent, DTA_mm, threshold_percent, uncertainty_percent, global/local)
-ACTIVE, 3, 1, 20, 10, local
+ACTIVE, 3, 1, 20, 10, global
 
 # GAMMA CRITERIA (ACTIVE/INACTIVE, dose_percent, DTA_mm, threshold_percent, uncertainty_percent, global/local)
 ACTIVE, 5, 1, 20, 10, global
