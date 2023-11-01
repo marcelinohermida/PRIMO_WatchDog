@@ -11,7 +11,7 @@ import threading
 import time
 import sys
 
-from automate_PRIMO_simulations import automate_PRIMO_simulation
+from Automate_PRIMO_simulations import automate_PRIMO_simulation
 from colorama import init, Fore, Back, Style
 init(strip=not sys.stdout.isatty()) # strip colors if stdout is redirected
 
