@@ -152,3 +152,4 @@ cython_debug/
 #.idea/
 PRIMO_simulation_results.csv
 PRIMO_simulation_results.csv
+config_file_GUI.py
