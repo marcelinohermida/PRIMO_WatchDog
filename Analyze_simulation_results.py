@@ -2,40 +2,6 @@
 """
 analyze_simulation_results
 
-
-v1.09_para_GitHub: no new features, except adding a fourth gamma criteria:
-                   3%/3mm, th=10%. Simplifications to publish in Github.
-                   Quiron edition removed. Changes to the code: conform
-                   to PEP-8 style guidelines, and refactoring into functions
-                   to improve readability and maintenance. MH. 29/10/23.
-
-v1.09: no changes respect to 1.08. 1/11/22. MH.
-
-v1.08: no changes respect to 1.07. 23/2/22. MH.
-
-v1.07: a bug was introduced in v1.05: when the original txt files were deleted,
-       the format of the only txt files remaining was "_dose_report" instead
-       of the original "-dose_report-". As a consequence, the text files were
-       not analyzed. Corrected in this version. 15/2/22. MH.
-
-v1.06: no changes respect to 1.05. MH
-
-v1.05: Include plan_technique as input parameter. MH. 29/1/22. MH.
-
-v1.04: add new input parameter: energy. Taken from the RP file. 22/1/22. MH.
-
-v1.03: add new input parameters: linac_ID, TPS, and TPS_version. Taken from
-       the RP file. 22/1/22. MH.
-
-v1.02: Implements recursive watchdog. 29-12-21.
-
-v 1.01: try to implement simulations queue.
-
-v 1.00
-
-Created on Wed Dec 8 17:29:11 2021
-
-
 @author: Marce
 """
 

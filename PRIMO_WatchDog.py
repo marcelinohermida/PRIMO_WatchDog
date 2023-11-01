@@ -1,35 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-
-v1.10: no changes. Added gamma criteria defined by user in CONFIG file.
-       MH. 1/11/23
-
-v1.09_para_GitHub: no new functionalities. Simplifications to publish in
-                   Github. Quiron edition removed. MH. 8/10/23.
-
-v1.09: no changes respect to 1.07. MH. 1/11/22.
-
-v1.08: no changes respect to 1.07. MH. 23/2/22.
-
-v1.07: no changes respect to 1.06. MH. 15/2/22.
-
-v1.06: no changes respect to 1.05. MH. 14/2/22.
-
-v1.05: Changes spaces in filenames to "_". 13/2/22. MH.
-
-v1.04: no changes respect to 1.03. MH.
-
-v1.03: changes # in filenames. Added "# QUIRON", so only one edition of the
-       program is needed. 22/1/22. MH.
-
-v1.02: Implementation of recursive watchdog, to allow using DICOM files or
-       directly a folder full of DICOM files.
-
-v1.01: Dec 28, 2021
-
-
-Created on Sun Oct 31 19:59:07 2021
+PRIMO_WatchDog
 
 @author: Marce
 """
