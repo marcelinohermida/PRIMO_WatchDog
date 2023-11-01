@@ -680,7 +680,6 @@ def automate_PRIMO_simulation():
     
     # SEND RESULTS TO TELEGRAM BOT
     if SEND_TELEGRAM == "YES":
-
         try:
             project_name = patient_ID + "\_" + plan_ID
             message = ("Simulation of project " + project_name +
