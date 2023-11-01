@@ -3,6 +3,8 @@
 AutomatePRIMOsimulations
 
 
+v1.10: added gamma criteria defined by user in CONFIG.DOG file. MH. 1/11/23.
+
 v1.09_para_GitHub: no new functionalities. Simplifications for Github.
                    Quiron edition removed. MH. 8/10/23.
 
@@ -317,14 +319,13 @@ def automate_PRIMO_simulation():
     treatment_beam.ControlPointSequence[0].GantryRotationDirection == "CCW":
         plan_technique = "VMAT"   # VMAT from Eclipse
     
-    
     write_to_log(f'Plan technique: {plan_technique}')
   
     # Energy check. Only 6 MV (FF or FFF) is allowed in this version
     if str(energy) != "6":
-        print(f"Energy found: {energy}. Only 6 MV (FF or FFF) allowed!")
+        print(f"Energy found: {energy} MV. Only 6 MV (FF or FFF) allowed!")
         print("Closing program")
-        write_to_log(f"ERROR: Energy found: {energy}. "
+        write_to_log(f"ERROR: Energy found: {energy} MV. "
                      f"Only 6 MV (FF or FFF) allowed!")
         write_to_log("Closing program")
         exit()
@@ -493,14 +494,7 @@ def automate_PRIMO_simulation():
         macro_file.write("# 10 - Gamma analysis inside body, default criteria, smoothing\n")
         macro_file.write("#        the reference 'project' dose \n")
                          
-                
-        #gamma_criteria = [
-        #    ("3.0", "0.1", "20", "10"),
-        #    ("5.0", "0.1", "20", "10"),
-        #    ("2.0", "0.2", "50", "10"),
-        #    ("3.0", "0.3", "10", "10")
-        #    ]
-        
+        # gamma criteria defined by user in the CONFIG.DOG file
         for delta, dta, threshold, unc, globallocal in USER_GAMMA_CRITERIA2:
             if globallocal == "global":
                 gamma_line = (
@@ -508,12 +502,20 @@ def automate_PRIMO_simulation():
                 f"\\threshold={threshold} \\unc={unc} "
                 "\\region=body \\extended \\report\n"
                 )
-            else:
+            elif globallocal == "local":
                 gamma_line = (
                 f"gamma \\deltadose={delta} \\dta={dta} "
                 f"\\threshold={threshold} \\unc={unc} "
                 "\\region=body \\extended \\local \\report\n"
                 )
+            else:
+                gamma_line = (
+                f"gamma \\deltadose={delta} \\dta={dta} "
+                f"\\threshold={threshold} \\unc={unc} "
+                "\\region=body \\extended \\report\n"
+                )
+                write_to_log(f"WARNING: gamma analysis type unknown!"
+                             f" Assumming global gamma analysis")
             
             macro_file.write(gamma_line)
         
