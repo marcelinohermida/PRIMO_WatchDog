@@ -127,7 +127,7 @@ def automate_PRIMO_simulation():
         if line == "# SPLITTING FACTOR\n":
                 SPLITTING_FACTOR = config_lines[index + 1].strip('\n')       
 
-        if line == "# GAMMA CRITERIA (ACTIVE/INACTIVE, dose_percent, DTA_mm, threshold_percent, uncertainty, global/local)\n":
+        if line == "# GAMMA CRITERIA (ACTIVE/INACTIVE, dose_percent, DTA_mm, threshold_percent, uncertainty_percent, global/local)\n":
             gamma_criteria = config_lines[index + 1].strip('\n')
             status = gamma_criteria.split(",")[0].strip()
             dose = gamma_criteria.split(",")[1].strip()
