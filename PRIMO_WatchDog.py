@@ -104,7 +104,6 @@ if __name__ == "__main__":
         
     #    read CONFIG file
     # Source: (https://stackabuse.com/read-a-file-line-by-line-in-python/)
-    QUIRON = "NO"    # default option
     if os.environ['COMPUTERNAME'] == 'LAPTOP-78R8OE0P':
         with open('.\\CONFIG_LAPTOP.DOG', encoding="UTF-8") as config_file:
                   config_lines = config_file.readlines()   # read lines of file
@@ -115,10 +114,7 @@ if __name__ == "__main__":
     for index, line in enumerate(config_lines):
         if line == "# DICOM RT IMPORT FOLDER\n":
                 watched_folder = config_lines[index + 1].strip('\n')
-        
-        if line == "# QUIRON\n":
-                QUIRON = config_lines[index + 1].strip('\n')
-                
+                        
                 
                 
     # Presentation
@@ -127,11 +123,11 @@ if __name__ == "__main__":
 
     print(Fore.YELLOW + Back.BLACK + Style.BRIGHT +
           VERSION + ". Marcelino Hermida (2023)")
-
     
     print("\n" + Fore.GREEN + Style.BRIGHT + "Waiting for DICOM files \n")
     write_to_log("PRIMO WATCHDOG " + VERSION + \
                " is active. Waiting for DICOM files")
+    
     
     # functions to be run on specified events 
     def on_created(event):
@@ -141,6 +137,7 @@ if __name__ == "__main__":
         number_files = len(file_list)
         print (number_files, "files in the watched folder!")
 
+
     def on_deleted(event):
         print(f"{event.src_path} has been DELETED!")
         #list = os.listdir(watched_folder) # dir is your directory path
@@ -148,12 +145,14 @@ if __name__ == "__main__":
         number_files = len(file_list)
         print (number_files, "files in the watched folder!")
 
+
     def on_modified(event):
         print(f"{event.src_path} has been MODIFIED")
         #list = os.listdir(watched_folder) # dir is your directory path
         file_list = glob.glob(watched_folder + "/**/*.*", recursive = True)
         number_files = len(file_list)
         print (number_files, "files in the watched folder!")
+
 
     def on_moved(event):
         print(f"{event.src_path} was MOVED to {event.dest_path}")
@@ -203,7 +202,7 @@ if __name__ == "__main__":
                     if '#' in original_filename and '.dcm' in original_filename:
                         # "#" not valid character in PRIMO
                         new_filename = original_filename.replace("#", "_")  
-                        os.rename(os.path.join(original_path, original_filename),
+                        os.rename(os.path.join(original_path,original_filename),
                                   os.path.join(original_path, new_filename))
                     
                 # change spaces in the filename to "_"                
