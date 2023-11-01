@@ -48,7 +48,7 @@ import glob
 from write_to_log import write_to_log
 
 # script version
-VERSION = "v. 1.09 Github"
+VERSION = "v. 1.10"
 
 # MAX NUMBER OF STRUCTURES IN THE GAMMA ANALYSIS FILE
 MAX_NUM_STRUCTURES = 30
@@ -101,10 +101,6 @@ def analyze_simulation_results(simulation_folder, linac_ID, TPS, TPS_version,
     save_simulation_results_to_csv(text_file_list, MAX_NUM_STRUCTURES,
                                    updated_data_row)
     
-
-
-
-
 
 
 
@@ -178,10 +174,6 @@ def analyze_log_file(simulation_folder):
 
 
 
-
-
-
-
 def analyze_rtf_file(simulation_folder, project_id, VERSION,
                      PRIMO_version, processors, proc_speed_GHz, engine,
                      start_datetime, histories, linac_ID, TPS, TPS_version,
@@ -226,11 +218,6 @@ def analyze_rtf_file(simulation_folder, project_id, VERSION,
     write_to_log(f"Data extraction from {rtf_file} completed")
     
     return data_row
-
-
-
-
-
 
 
 

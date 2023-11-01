@@ -92,7 +92,7 @@ from write_to_log import write_to_log
 def automate_PRIMO_simulation():
     
     # Script version
-    VERSION = "v. 1.09 GitHub"
+    VERSION = "v. 1.10"
     
     # Current folder
     execution_folder = os.getcwd()

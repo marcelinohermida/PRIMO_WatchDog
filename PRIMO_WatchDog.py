@@ -2,6 +2,9 @@
 
 """
 
+v1.10: no changes. Added gamma criteria defined by user in CONFIG file.
+       MH. 1/11/23
+
 v1.09_para_GitHub: no new functionalities. Simplifications to publish in
                    Github. Quiron edition removed. MH. 8/10/23.
 
@@ -58,7 +61,7 @@ os.system('color')    # to be able to use color text to the console
 
 
 # VERSION
-VERSION = "v. 1.09 GitHub"
+VERSION = "v. 1.10"
 
 # Create the event handler
 # The event handler is the object that will be notified when something
