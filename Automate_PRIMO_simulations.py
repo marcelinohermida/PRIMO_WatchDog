@@ -131,7 +131,8 @@ def automate_PRIMO_simulation():
             gamma_criteria = config_lines[index + 1].strip('\n')
             status = gamma_criteria.split(",")[0].strip()
             dose = gamma_criteria.split(",")[1].strip()
-            DTA = gamma_criteria.split(",")[2].strip()
+            # PRIMO uses DTA in cm!
+            DTA = gamma_criteria.split(",")[2].strip()/10
             threshold = gamma_criteria.split(",")[3].strip()
             uncertainty = gamma_criteria.split(",")[4].strip()
             type = gamma_criteria.split(",")[5].strip()
