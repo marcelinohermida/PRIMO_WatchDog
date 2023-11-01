@@ -132,7 +132,8 @@ def automate_PRIMO_simulation():
             status = gamma_criteria.split(",")[0].strip()
             dose = gamma_criteria.split(",")[1].strip()
             # PRIMO uses DTA in cm!
-            DTA = gamma_criteria.split(",")[2].strip()/10
+            DTA_mm = gamma_criteria.split(",")[2].strip()
+            DTA = str(int(DTA_mm)/10)
             threshold = gamma_criteria.split(",")[3].strip()
             uncertainty = gamma_criteria.split(",")[4].strip()
             type = gamma_criteria.split(",")[5].strip()
@@ -143,6 +144,11 @@ def automate_PRIMO_simulation():
                                    item[0] == 'ACTIVE']
             # remove first column
             USER_GAMMA_CRITERIA2 = [item[1:] for item in USER_GAMMA_CRITERIA]
+            
+            write_to_log(f"Gamma criteria found: {dose}%/"
+                         f"{DTA_mm} mm, "
+                         f"th = {threshold}%, uncertainty = {uncertainty}%"
+                         f", {type} gamma analysis")
             
             MULTIPLE_GAMMA_ANALYSES = len(USER_GAMMA_CRITERIA2)
 
