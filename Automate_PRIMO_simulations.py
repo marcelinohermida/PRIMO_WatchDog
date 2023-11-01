@@ -145,11 +145,6 @@ def automate_PRIMO_simulation():
             # remove first column
             USER_GAMMA_CRITERIA2 = [item[1:] for item in USER_GAMMA_CRITERIA]
             
-            write_to_log(f"Gamma criteria found: {dose}%/"
-                         f"{DTA_mm} mm, "
-                         f"th = {threshold}%, uncertainty = {uncertainty}%"
-                         f", {type} gamma analysis")
-            
             MULTIPLE_GAMMA_ANALYSES = len(USER_GAMMA_CRITERIA2)
 
         if line == "# SEND TELEGRAM\n":
@@ -525,6 +520,7 @@ def automate_PRIMO_simulation():
                              f" Assumming global gamma analysis")
             
             macro_file.write(gamma_line)
+            write_to_log(gamma_line.strip('\n'))
         
         macro_file.write("\n")
         macro_file.write("\n")
