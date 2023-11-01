@@ -100,7 +100,9 @@ def automate_PRIMO_simulation():
     # Source: (https://stackabuse.com/read-a-file-line-by-line-in-python/)
     with open('.\\CONFIG.DOG', encoding="UTF-8") as config_file:
                   config_lines = config_file.readlines()  # read lines of file    
-
+    
+    USER_GAMMA_CRITERIA = []  # create empty list to store user gamma criteria
+    
     for index, line in enumerate(config_lines):
         if line == "# DICOM RT IMPORT FOLDER\n":
                 DICOM_import_folder = config_lines[index + 1].strip('\n')
@@ -122,6 +124,24 @@ def automate_PRIMO_simulation():
         
         if line == "# SPLITTING FACTOR\n":
                 SPLITTING_FACTOR = config_lines[index + 1].strip('\n')       
+
+        if line == "# GAMMA CRITERIA (ACTIVE/INACTIVE, dose_percent, DTA_mm, threshold_percent, uncertainty, global/local)\n":
+            gamma_criteria = config_lines[index + 1].strip('\n')
+            status = gamma_criteria.split(",")[0].strip()
+            dose = gamma_criteria.split(",")[1].strip()
+            DTA = gamma_criteria.split(",")[2].strip()
+            threshold = gamma_criteria.split(",")[3].strip()
+            uncertainty = gamma_criteria.split(",")[4].strip()
+            type = gamma_criteria.split(",")[5].strip()
+            USER_GAMMA_CRITERIA.append((status, dose, DTA, threshold,
+                                        uncertainty, type))
+            # filter only ACTIVE gamma criteria
+            USER_GAMMA_CRITERIA = [item for item in USER_GAMMA_CRITERIA if
+                                   item[0] == 'ACTIVE']
+            # remove first column
+            USER_GAMMA_CRITERIA2 = [item[1:] for item in USER_GAMMA_CRITERIA]
+            
+            MULTIPLE_GAMMA_ANALYSES = len(USER_GAMMA_CRITERIA2)
 
         if line == "# SEND TELEGRAM\n":
                 SEND_TELEGRAM = config_lines[index + 1].strip('\n')
@@ -473,20 +493,28 @@ def automate_PRIMO_simulation():
         macro_file.write("# 10 - Gamma analysis inside body, default criteria, smoothing\n")
         macro_file.write("#        the reference 'project' dose \n")
                          
-        # Gamma criteria: delta dose, DTA, threshold, and uncertainty
-        gamma_criteria = [
-            ("3.0", "0.1", "20", "10"),
-            ("5.0", "0.1", "20", "10"),
-            ("2.0", "0.2", "50", "10"),
-            ("3.0", "0.3", "10", "10")
-            ] gga
+                
+        #gamma_criteria = [
+        #    ("3.0", "0.1", "20", "10"),
+        #    ("5.0", "0.1", "20", "10"),
+        #    ("2.0", "0.2", "50", "10"),
+        #    ("3.0", "0.3", "10", "10")
+        #    ]
         
-        for delta, dta, threshold, unc in gamma_criteria:
-            gamma_line = (
+        for delta, dta, threshold, unc, globallocal in USER_GAMMA_CRITERIA2:
+            if globallocal == "global":
+                gamma_line = (
                 f"gamma \\deltadose={delta} \\dta={dta} "
                 f"\\threshold={threshold} \\unc={unc} "
                 "\\region=body \\extended \\report\n"
-            )
+                )
+            else:
+                gamma_line = (
+                f"gamma \\deltadose={delta} \\dta={dta} "
+                f"\\threshold={threshold} \\unc={unc} "
+                "\\region=body \\extended \\local \\report\n"
+                )
+            
             macro_file.write(gamma_line)
         
         macro_file.write("\n")
@@ -502,7 +530,7 @@ def automate_PRIMO_simulation():
     print("\nPRIMO macro created \n")
     write_to_log("PRIMO macro created: " + macro_file.name)
     
-    MULTIPLE_GAMMA_ANALYSES = 4   # analysis with 4 criteria, to be used later.
+    #MULTIPLE_GAMMA_ANALYSES = 4   # analysis with 4 criteria, to be used later.
                                   # This will be improved in further versions
         
     # Checks if the simulation folder already exists. If it exists, it is

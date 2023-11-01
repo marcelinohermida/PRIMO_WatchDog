@@ -4,7 +4,7 @@
 #  Purpose: 
 #  Requirements: 
 #  
-#  Created by Marcelino Hermida. 08 Oct 2023 
+#  Created by Marcelino Hermida. 01 Nov 2023 
 #--------------------------------------------------------------------
 
 # DICOM RT IMPORT FOLDER
@@ -45,6 +45,15 @@ REDUCED
 0.8
 100
 1.4507
+
+# GAMMA CRITERIA (ACTIVE/INACTIVE, dose_percent, DTA_mm, threshold_percent, uncertainty, global/local)
+ACTIVE, 3, 2, 10, 10, local
+
+# GAMMA CRITERIA (ACTIVE/INACTIVE, dose_percent, DTA_mm, threshold_percent, uncertainty, global/local)
+INACTIVE, 5, 1, 10, 10, global
+
+# GAMMA CRITERIA (ACTIVE/INACTIVE, dose_percent, DTA_mm, threshold_percent, uncertainty, global/local)
+ACTIVE, 2, 2, 50, 10, global
 
 # SEND TELEGRAM
 NO
