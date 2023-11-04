@@ -279,30 +279,35 @@ def save_simulation_results_to_csv(text_file_list, MAX_NUM_STRUCTURES,
                 ])
 
         try:
-            with open('PRIMO_simulation_results.csv', 'w', encoding='UTF8', newline='') as csv_file:
+            with open('PRIMO_simulation_results.csv', 'w',
+                      encoding='UTF8', newline='') as csv_file:
                 writer = csv.writer(csv_file)
                 writer.writerow(header)
         except PermissionError:
             time.sleep(3)
-            with open('PRIMO_simulation_results.csv', 'w', encoding='UTF8', newline='') as csv_file:
+            with open('PRIMO_simulation_results.csv', 'w',
+                      encoding='UTF8', newline='') as csv_file:
                 writer = csv.writer(csv_file)
                 writer.writerow(header)
         except:
             write_to_log('ERROR: Header could not be written to csv file')
 
     try:
-        with open('PRIMO_simulation_results.csv', 'a', encoding='UTF8', newline='') as csv_file:
+        with open('PRIMO_simulation_results.csv', 'a',
+                  encoding='UTF8', newline='') as csv_file:
             writer = csv.writer(csv_file)
             writer.writerow(data_row)
             write_to_log('Results saved to PRIMO_simulation_results.csv')
     except PermissionError:
         time.sleep(3)
-        with open('PRIMO_simulation_results.csv', 'a', encoding='UTF8', newline='') as csv_file:
+        with open('PRIMO_simulation_results.csv', 'a',
+                  encoding='UTF8', newline='') as csv_file:
             writer = csv.writer(csv_file)
             writer.writerow(data_row)
             write_to_log('Results saved to PRIMO_simulation_results.csv')
     except:
-        write_to_log(f"ERROR: Results could not be saved to PRIMO_simulation_results.csv!")
+        write_to_log(f"ERROR: Results could not be saved to "
+                     f"PRIMO_simulation_results.csv!")
 
 
 
