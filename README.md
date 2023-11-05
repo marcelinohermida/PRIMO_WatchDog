@@ -8,10 +8,10 @@ A set of scripts (PRIMO WatchDog) was developed in Python 3.7 to automate the si
 -	When the DICOM files are detected, the patient and plan ID, linac ID, beam energy, and MLC model, among other parameters, are read from the DICOM files.
 -	The scripts create a PRIMO macro file to setup the simulation and the gamma index analyses. At this point, the scripts are ready to manage a new plan in a parallel process.
 -	The scripts start PRIMO with the macro file, and the simulation begins.
--	Once the simulation and the gamma index analyses are done, the scripts store the results in a CSV text file for further analysis.
+-	Once the simulation and the gamma index analysis is done, the PDF report with the results is open for review, and the associated PRIMO instance is closed.
 
 The scripts were tested with the following hardware and software:
--	PRIMO v. 0.3.1.1816 under Windows 7 and Windows 10.
+-	PRIMO v. 0.3.64.1814 under Windows 7 and Windows 10.
 -	Varian PSF for 6 MV and 6 MV FFF photon beams from a TrueBeam linac.
 -	IMRT and VMAT plans from Varian Eclipse 15.6/16.1, for TrueBeam linacs with Millennium 120 and HD MLC models.
 -	VMAT plans from Brainlab Elements Cranial SRS 3.0, and DCA plans from Brainlab Elements Multiple Metastases 3.0, for a TrueBeam linac with HD MLC.
