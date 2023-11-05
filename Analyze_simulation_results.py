@@ -14,7 +14,7 @@ import glob
 from write_to_log import write_to_log
 
 # script version
-VERSION = "v. 1.10"
+VERSION = "v. 1.10_PRIMO_1814"
 
 # MAX NUMBER OF STRUCTURES IN THE GAMMA ANALYSIS FILE
 MAX_NUM_STRUCTURES = 30

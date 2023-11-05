@@ -26,7 +26,7 @@ from write_to_log import write_to_log
 def automate_PRIMO_simulation():
     
     # Script version
-    VERSION = "v. 1.10"
+    VERSION = "v. 1.10_PRIMO_1814"
     
     # Current folder
     execution_folder = os.getcwd()

@@ -33,7 +33,7 @@ os.system('color')    # to be able to use color text to the console
 
 
 # VERSION
-VERSION = "v. 1.10"
+VERSION = "v. 1.10_PRIMO_1814"
 
 # Create the event handler
 # The event handler is the object that will be notified when something
