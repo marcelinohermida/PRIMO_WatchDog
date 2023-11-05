@@ -505,6 +505,9 @@ def automate_PRIMO_simulation():
         numPDFfiles = len(glob.glob1(simulation_folder,"*.pdf"))
         time.sleep(3)
     
+#    This section is commented, as it only works with PRIMO 0.3.64.1816,
+#    which is a PRIMO version not publicly available yet.
+#
 #    # List of PDF files
 #    PDF_file_list = glob.glob1(simulation_folder, "*.pdf")
 #    for file in PDF_file_list:
@@ -599,7 +602,9 @@ def automate_PRIMO_simulation():
        write_to_log("Simulation ended succesfully")
        
        
-    
+#    This section is commented, as it only works with PRIMO 0.3.64.1816,
+#    which is a PRIMO version not publicly available yet.
+#    
 #    # EXTRACT DATA FROM LOG AND TXT FILES.
 #    # ONCE EXTRACTED, SAVE THE DATA ON CSV FILE
 #    from Analyze_simulation_results import analyze_simulation_results
