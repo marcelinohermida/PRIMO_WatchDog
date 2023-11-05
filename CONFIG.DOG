@@ -49,6 +49,15 @@ REDUCED
 # GAMMA CRITERIA (ACTIVE/INACTIVE, dose_percent, DTA_mm, threshold_percent, uncertainty_percent, global/local)
 ACTIVE, 3, 1, 20, 10, global
 
+# GAMMA CRITERIA (ACTIVE/INACTIVE, dose_percent, DTA_mm, threshold_percent, uncertainty_percent, global/local)
+INACTIVE, 5, 1, 20, 10, global
+
+# GAMMA CRITERIA (ACTIVE/INACTIVE, dose_percent, DTA_mm, threshold_percent, uncertainty_percent, global/local)
+INACTIVE, 2, 2, 50, 10, global
+
+# GAMMA CRITERIA (ACTIVE/INACTIVE, dose_percent, DTA_mm, threshold_percent, uncertainty_percent, global/local)
+INACTIVE, 3, 3, 10, 10, global
+
 # SEND TELEGRAM
 NO
 
