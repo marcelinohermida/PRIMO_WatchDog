@@ -499,66 +499,65 @@ def automate_PRIMO_simulation():
      
     # Check PDF formation to be sure macro is finished
     simulation_folder = Simulations_folders + '\\' + patient_ID + '_' + plan_ID
-    
-    
+        
     numPDFfiles = 0       # PDF files counter
     while numPDFfiles != MULTIPLE_GAMMA_ANALYSES:
         numPDFfiles = len(glob.glob1(simulation_folder,"*.pdf"))
         time.sleep(3)
     
-    # List of PDF files
-    PDF_file_list = glob.glob1(simulation_folder, "*.pdf")
-    for file in PDF_file_list:
-        filename = file.split('.pdf')[0]
-        filename = filename + '.txt'     # the corresponding txt file
-        filename_text = filename
-        filename = os.path.join(simulation_folder, filename.split('.pdf')[0])
- 
-        with open(filename, encoding="UTF-8") as file_txt:
-            lines = file_txt.readlines()   # read lines of file
-            
-            for index, line in enumerate(lines):
-                if "DTA criterion" in line:
-                    DTA = re.search("\d+\.\d+", line)[0]  #regexp for float
-                    DTA = float(DTA)*10     # DTA in mm
-                    DTA = str(DTA).replace('.0', '')
-               
-                if "Dose difference criterion" in line:
-                    #regexp for float
-                    dose_dif = float(re.search("\d+\.\d+", line)[0])  
-                    dose_dif = str(dose_dif).replace('.0', '')
-                    
-                    global_local = re.findall('\(.*?\)', line)[1]
-                    global_local = global_local.replace('(', '').replace(')',
-                                                        '')
-                
-                if "Dose threshold" in line:
-                    #regexp for float
-                    th = float(re.search("\d+\.\d+", line)[0])  
-                    th = str(th).replace('.0', '')
-           
-        try:
-            PDF_report = patient_ID + "_" + plan_ID + "_dose_report_" + \
-                dose_dif + "_" + DTA + "_" + th + "_" + global_local + ".pdf"
-            
-            txt_report = patient_ID + "_" + plan_ID + "_dose_report_" + \
-                dose_dif + "_" + DTA + "_" + th + "_" + global_local + ".txt"
-                        
-            # Copy PDF with different name and delete original PDF (move)
-            shutil.move(simulation_folder + "\\" + file,
-                           simulation_folder + "\\" + PDF_report)
-            
-            
-            # Copy text file with different name and delete original text file
-            # (move)
-            shutil.move(simulation_folder + "\\" + filename_text,
-                           simulation_folder + "\\" + txt_report)
-            
-            write_to_log("Gamma analysis report ready: " + PDF_report)
-
-        except:
-            write_to_log(f"ERROR: Problem found while renaming "
-                         f"PDF report: {file}")
+#    # List of PDF files
+#    PDF_file_list = glob.glob1(simulation_folder, "*.pdf")
+#    for file in PDF_file_list:
+#        filename = file.split('.pdf')[0]
+#        filename = filename + '.txt'     # the corresponding txt file
+#        filename_text = filename
+#        filename = os.path.join(simulation_folder, filename.split('.pdf')[0])
+# 
+#        with open(filename, encoding="UTF-8") as file_txt:
+#            lines = file_txt.readlines()   # read lines of file
+#            
+#            for index, line in enumerate(lines):
+#                if "DTA criterion" in line:
+#                    DTA = re.search("\d+\.\d+", line)[0]  #regexp for float
+#                    DTA = float(DTA)*10     # DTA in mm
+#                    DTA = str(DTA).replace('.0', '')
+#               
+#                if "Dose difference criterion" in line:
+#                    #regexp for float
+#                    dose_dif = float(re.search("\d+\.\d+", line)[0])  
+#                    dose_dif = str(dose_dif).replace('.0', '')
+#                    
+#                    global_local = re.findall('\(.*?\)', line)[1]
+#                    global_local = global_local.replace('(', '').replace(')',
+#                                                        '')
+#                
+#                if "Dose threshold" in line:
+#                    #regexp for float
+#                    th = float(re.search("\d+\.\d+", line)[0])  
+#                    th = str(th).replace('.0', '')
+#           
+#        try:
+#            PDF_report = patient_ID + "_" + plan_ID + "_dose_report_" + \
+#                dose_dif + "_" + DTA + "_" + th + "_" + global_local + ".pdf"
+#            
+#            txt_report = patient_ID + "_" + plan_ID + "_dose_report_" + \
+#                dose_dif + "_" + DTA + "_" + th + "_" + global_local + ".txt"
+#                        
+#            # Copy PDF with different name and delete original PDF (move)
+#            shutil.move(simulation_folder + "\\" + file,
+#                           simulation_folder + "\\" + PDF_report)
+#            
+#            
+#            # Copy text file with different name and delete original text file
+#            # (move)
+#            shutil.move(simulation_folder + "\\" + filename_text,
+#                           simulation_folder + "\\" + txt_report)
+#            
+#            write_to_log("Gamma analysis report ready: " + PDF_report)
+#
+#        except:
+#            write_to_log(f"ERROR: Problem found while renaming "
+#                         f"PDF report: {file}")
 
     # Opens all gamma analyses PDF reports
     PDF_file_list = glob.glob1(simulation_folder, "*.pdf")
@@ -601,12 +600,12 @@ def automate_PRIMO_simulation():
        
        
     
-    # EXTRACT DATA FROM LOG AND TXT FILES.
-    # ONCE EXTRACTED, SAVE THE DATA ON CSV FILE
-    from Analyze_simulation_results import analyze_simulation_results
-    
-    analyze_simulation_results(simulation_folder, linac_ID, TPS, TPS_version,
-                               energy, plan_technique)
+#    # EXTRACT DATA FROM LOG AND TXT FILES.
+#    # ONCE EXTRACTED, SAVE THE DATA ON CSV FILE
+#    from Analyze_simulation_results import analyze_simulation_results
+#    
+#    analyze_simulation_results(simulation_folder, linac_ID, TPS, TPS_version,
+#                               energy, plan_technique)
 
 
     

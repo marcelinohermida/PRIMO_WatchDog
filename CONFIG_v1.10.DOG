@@ -1,10 +1,10 @@
 #--------------------------------------------------------------------
-#  CONFIG.DOG configuration file for PRIMO WatchDog v1.10 for PRIMO 1814
+#  CONFIG.DOG configuration file for PRIMO WatchDog v1.09 GitHub
 #
 #  Purpose: 
 #  Requirements: 
 #  
-#  Created by Marcelino Hermida. 05 Nov 2023 
+#  Created by Marcelino Hermida. 01 Nov 2023 
 #--------------------------------------------------------------------
 
 # DICOM RT IMPORT FOLDER
@@ -48,6 +48,15 @@ REDUCED
 
 # GAMMA CRITERIA (ACTIVE/INACTIVE, dose_percent, DTA_mm, threshold_percent, uncertainty_percent, global/local)
 ACTIVE, 3, 1, 20, 10, global
+
+# GAMMA CRITERIA (ACTIVE/INACTIVE, dose_percent, DTA_mm, threshold_percent, uncertainty_percent, global/local)
+ACTIVE, 5, 1, 20, 10, global
+
+# GAMMA CRITERIA (ACTIVE/INACTIVE, dose_percent, DTA_mm, threshold_percent, uncertainty_percent, global/local)
+ACTIVE, 2, 2, 50, 10, global
+
+# GAMMA CRITERIA (ACTIVE/INACTIVE, dose_percent, DTA_mm, threshold_percent, uncertainty_percent, global/local)
+ACTIVE, 3, 3, 10, 10, global
 
 # SEND TELEGRAM
 NO
