@@ -1,6 +1,6 @@
 # PRIMO WatchDog
 
-The PRIMO Monte Carlo software [Strahlenther Onkol. 2013;189:881-886] allows the simulation of clinical IMRT and VMAT plans for Varian linacs. PRIMO relies on the general-purpose Monte Carlo code PENELOPE and the fast Monte Carlo code DPM.
+The PRIMO Monte Carlo software [Strahlenther Onkol. 2013;189:881-886] allows the simulation of clinical IMRT and VMAT plans for Varian linacs. PRIMO relies on the general-purpose Monte Carlo code PENELOPE and the fast Monte Carlo code DPM. PRIMO is free (although not open) software, and can be found on https://primoproject.net/primo/.
 The setup of a plan simulation in PRIMO takes 5-10 min, as several manual steps are needed: project creation, selection of phase-space file (PSF), import of DICOM files, etc. After the simulation, a manual import of the DICOM dose file from the treatment planning system (TPS) is also needed to compare PRIMO and TPS dose distributions. PRIMO provides an advanced macro mode to speed up the process, but the macro file creation is also manual. Hence, the simulation of plans on a routine basis can be very time-consuming. We aimed to automate the simulation setup of clinical plans, including IMRT, dynamic conformal arc (DCA), and VMAT techniques.
 
 A set of scripts (PRIMO WatchDog) was developed in Python 3.7 to automate the simulation setup:
